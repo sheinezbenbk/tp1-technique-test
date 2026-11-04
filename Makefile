@@ -18,4 +18,4 @@ lint:
 	python -m ruff check 
 
 doc: 
-	python -m doc --html --output-dir html triangulator
+	python -m pdoc --html --force --output-dir html triangulator

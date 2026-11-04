@@ -106,3 +106,32 @@ Nous utilisons `coverage run --branch -m pytest`
 ### **Pourquoi ?**
 
 Dans le code il va y avoir des `if/else`, par exemple pour gérer les erreurs 400/404/500/503. Une ligne "couverte" ne veut pas dire que le `if` et le `else` ont été testés, donc `--branch` permet de vérifier les deux côtés.
+
+# Mises à jour après la mise en place des tests
+
+## Codes de réponse testés
+- 200 : triangulation réussie (`application/octet-stream`).
+- 400 : identifiant qui n'est pas un UUID, **sans appeler** le PointSetManager.
+- 404 : le PointSetManager ne connaît pas l'identifiant.
+- 503 : le PointSetManager est injoignable.
+- 500 : octets corrompus reçus du PointSetManager, ou échec de l'algorithme.
+- 405 : méthode autre que GET.
+
+## Décisions prises quand l'énoncé ne tranche pas
+- Octets invalides au décodage (moins de 4 octets, points tronqués) : `ValueError`.
+- Ordre des octets : little-endian (`<`), hypothèse à confirmer.
+- Moins de 3 points ou points alignés : aucun triangle.
+- Points en double : aucun triangle d'aire nulle.
+
+## Organisation
+- Dossier `test/`, un fichier par couche : `test_binary.py`, `test_algorithm.py`,
+  `test_api.py`, `test_performance.py`.
+- Stub `StubClient` injecté dans `create_app` pour tester l'API sans serveur.
+- 60 tests : 51 tests unitaires et 9 tests de performance.
+
+## Performance
+- Marker `performance`, exclu de `make unit_test`.
+- Chronométrage avec `time.perf_counter()`, médiane de 5 mesures.
+- Préparation des données séparée de l'opération mesurée.
+- Environnement : Windows, Python 3.13. Les seuils actuels sont larges et
+  seront ajustés avec les vrais temps au rendu 3.
