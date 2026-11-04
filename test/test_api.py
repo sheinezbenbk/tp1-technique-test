@@ -22,7 +22,7 @@ class StubClient:
         """Crée le stub avec des octets à renvoyer ou une erreur à lever."""
         self.data = data
         self.error = error
-        self.calls = []
+        self.calls = [] 
 
     def get_pointset(self, pointset_id):
         """Réponse programmée, avec mémorisation des identifiants demandés."""
