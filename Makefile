@@ -10,7 +10,7 @@ perf_test:
 	python -m pytest -m "performance"
 
 coverage: 
-	python -m coverage run --branch -m pytest -m "not performance"
+	python -m coverage run --branch --source=triangulator -m pytest -m "not performance"
 	python -m coverage report -m
 	python -m coverage html
 

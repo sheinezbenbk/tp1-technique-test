@@ -135,3 +135,13 @@ Dans le code il va y avoir des `if/else`, par exemple pour gérer les erreurs 40
 - Préparation des données séparée de l'opération mesurée.
 - Environnement : Windows, Python 3.13. Les seuils actuels sont larges et
   seront ajustés avec les vrais temps au rendu 3.
+
+## Mises à jour après l'implémentation
+
+- Algorithme choisi : balayage de gauche à droite avec enveloppe convexe,
+  sans Delaunay. Les points sont triés, puis chaque point est relié aux
+  côtés de l'enveloppe qu'il « voit ». Les doublons et les points alignés
+  ne créent aucun triangle plat.
+- Ajout de `test_pointset_client.py` (5 tests, sans réseau réel) pour le
+  client HTTP, qui n'était pas prévu dans le plan initial.
+- Ordre des octets : little-endian supposé, à confirmer avec l'enseignant.
