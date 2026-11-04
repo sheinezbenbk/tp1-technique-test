@@ -96,3 +96,16 @@ def test_duplicate_points_give_no_degenerate_triangle():
     points = [(0.0, 0.0), (0.0, 0.0), (1.0, 0.0), (0.0, 1.0)]
     for triangle in triangulate(points):
         assert _area(points, triangle) > 0
+
+def test_collinear_prefix_then_apex_and_extra_point():
+    """Des points alignés au début, puis deux autres points, restent couverts."""
+    points = [(0.0, 0.0), (1.0, 0.0), (2.0, 0.0), (3.0, 1.0), (4.0, 0.0)]
+    triangles = triangulate(points)
+    assert len(triangles) == 3
+    assert sum(_area(points, t) for t in triangles) == pytest.approx(2.0)
+
+
+def test_third_point_on_the_right_side():
+    """Un troisième point situé à droite du premier segment donne un triangle."""
+    points = [(0.0, 0.0), (1.0, 0.0), (2.0, -1.0)]
+    assert len(triangulate(points)) == 1
