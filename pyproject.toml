@@ -11,7 +11,7 @@ select = [
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
-testpaths = ["tests"]
+testpaths = ["test"]
 markers = [
     "performance: test de performance, exclus de make unit_test",
 ]
