@@ -138,10 +138,38 @@ Dans le code il va y avoir des `if/else`, par exemple pour gérer les erreurs 40
 
 ## Mises à jour après l'implémentation
 
-- Algorithme choisi : balayage de gauche à droite avec enveloppe convexe,
-  sans Delaunay. Les points sont triés, puis chaque point est relié aux
-  côtés de l'enveloppe qu'il « voit ». Les doublons et les points alignés
-  ne créent aucun triangle plat.
-- Ajout de `test_pointset_client.py` (5 tests, sans réseau réel) pour le
-  client HTTP, qui n'était pas prévu dans le plan initial.
+# Mises à jour après l'implémentation
+
+## Algorithme choisi
+- Algorithme écrit sans bibliothèque, comme le demande l'énoncé : les points
+  sont triés de gauche à droite, puis chaque nouveau point est relié aux côtés
+  du contour qu'il « voit », ce qui crée de nouveaux triangles.
+- Les doublons et les points alignés ne créent aucun triangle plat.
+- Limite : la triangulation est correcte, mais l'algorithme ne cherche pas à
+  éviter les triangles très allongés (l'énoncé ne le demande pas).
+
+## Écarts avec le plan initial
+- Hypothesis (section I) n'est pas dans `dev_requirements.txt` : remplacée par
+  `pytest.mark.parametrize` et des points générés avec `random.Random(42)`
+  (graine fixe, donc toujours les mêmes points).
+- Section III : la phrase « Stub erreur 400 → 404 » était fausse. Les bons cas
+  sont ceux de la liste « Codes de réponse testés » ci-dessus.
+
+## Tests ajoutés pendant l'implémentation
+- 2 tests d'algorithme : points alignés au début, troisième point à droite du
+  premier segment.
+- `test_pointset_client.py` (5 tests) pour le client HTTP, non prévu dans le
+  plan initial : `urlopen` est remplacée avec `monkeypatch`, sans réseau réel.
+- Total : 67 tests, 58 unitaires (12 binaire, 25 algorithme, 16 API,
+  5 client) et 9 de performance, tous verts.
+
+## Résultats
+- Couverture : 100 % sur `triangulator/`, avec `--branch`.
+- Performance : triangulation de 1000 points en 0,0089 s, décodage de
+  10 000 points en 0,0014 s. Les seuils (1 s et 10 s) sont restés très larges
+  par rapport à ces mesures.
+- `make lint` : aucune erreur. `make doc` : documentation générée dans `html/`.
+
+## Points restant à confirmer
 - Ordre des octets : little-endian supposé, à confirmer avec l'enseignant.
+- La triangulation n'a pas été testée au-delà de 1000 points.
